@@ -6,7 +6,7 @@ pipeline{
     stages {
         stage('Build Maven') {
             steps{
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'dockerhubpwd', url: 'https://github.com/rupesh-zcr/jenkins-docker-example.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'githubpwd', url: 'https://github.com/rupesh-zcr/jenkins-docker-example.git']]])
 
                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
                 
@@ -22,8 +22,8 @@ pipeline{
         stage('Deploy Docker Image') {
             steps {
                 script {
-                 withCredentials([string(credentialsId: 'PWDDOCKER', variable: 'Password')]) {
-                    sh 'docker login -u ankush8421 -p ${Password}'
+                 withCredentials([string(credentialsId: 'Dockerhubpwd', variable: 'Password')]) {
+                 sh 'docker login -u ankush8421 -p ${Password}'
                  }  
                  sh 'docker push ankush8421/my-app-1.0'
                 }
